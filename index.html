@@ -161,15 +161,15 @@ button{ font-family: inherit; }
   position: sticky;
   top:0;
   z-index: 50;
-  background: rgba(255,255,255,0.92);
+  background: rgba(0,45,110,0.85);
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
 }
 .site-header .wrap{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  height: 76px;
+  height: 84px;
 }
 .brand{
   display:flex;
@@ -178,55 +178,19 @@ button{ font-family: inherit; }
   text-decoration:none;
 }
 .crest{
-  width: 46px; height:46px;
+  display:block;
+  width: 58px; height:58px;
   border-radius:50%;
+  object-fit: cover;
   flex-shrink:0;
-  box-shadow: 0 0 0 1px rgba(0,45,110,0.12), 0 6px 14px -7px rgba(0,45,110,0.5);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.18), 0 6px 14px -7px rgba(0,0,0,0.5);
 }
-/* Textos internos do SVG do logo (compartilhados entre header e rodapé via <use>) */
-.crest-arc{
-  font-family: var(--font-mono);
-  font-size: 7.5px;
-  font-weight: 600;
-  fill: rgba(255,255,255,0.82);
-}
-.crest-main{
-  font-family: var(--font-display);
-  font-size: 64px;
-  font-weight: 900;
-  fill: var(--white);
-  paint-order: stroke;
-  stroke: #001c4d;
-  stroke-width: 2px;
-}
-.crest-city{
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  fill: #00204F;
-}
-.brand-text{ display:flex; flex-direction:column; line-height:1.1; }
-.brand-text strong{
-  font-family: var(--font-display);
-  font-size:1.15rem;
-  color: var(--blue-deep);
-  font-weight:800;
-}
-.brand-text span{
-  font-family: var(--font-mono);
-  font-size:.62rem;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color: var(--slate);
-}
-
 .nav-toggle{ display:none; }
 .nav-toggle-label{
   display:none;
   width: 42px; height:42px;
   border-radius: var(--radius-sm);
-  border: 1.5px solid var(--line-strong);
+  border: 1.5px solid rgba(255,255,255,0.35);
   align-items:center;
   justify-content:center;
   cursor:pointer;
@@ -237,7 +201,7 @@ button{ font-family: inherit; }
   content:"";
   display:block;
   width: 20px; height:2px;
-  background: var(--blue-deep);
+  background: var(--white);
   border-radius:2px;
   position:relative;
   transition: transform .2s ease, opacity .2s ease;
@@ -248,7 +212,7 @@ button{ font-family: inherit; }
 .main-nav ul{ display:flex; align-items:center; gap: 2.1rem; }
 .main-nav a{
   text-decoration:none;
-  color: var(--ink);
+  color: var(--white);
   font-weight:600;
   font-size:.96rem;
   position:relative;
@@ -261,15 +225,14 @@ button{ font-family: inherit; }
   transition: right .2s ease;
 }
 .main-nav a:hover::after{ right:0; }
-.nav-cta{ display:flex; }
 
 @media (max-width: 860px){
   .nav-toggle-label{ display:flex; }
   .main-nav{
     position:absolute;
-    top:76px; left:0; right:0;
-    background: var(--white);
-    border-bottom:1px solid var(--line);
+    top:84px; left:0; right:0;
+    background: rgba(0,45,110,0.97);
+    border-bottom:1px solid rgba(255,255,255,0.14);
     max-height:0;
     overflow:hidden;
     transition: max-height .28s ease;
@@ -280,11 +243,10 @@ button{ font-family: inherit; }
     gap:0;
     padding: .5rem clamp(1.25rem,4vw,2.5rem) 1.25rem;
   }
-  .main-nav li{ border-bottom:1px solid var(--line); }
+  .main-nav li{ border-bottom:1px solid rgba(255,255,255,0.14); }
   .main-nav a{ display:block; padding:.9rem 0; }
   .main-nav a::after{ display:none; }
-  .nav-cta{ padding-top:1rem; }
-  .nav-toggle:checked ~ .main-nav{ max-height: 420px; }
+  .nav-toggle:checked ~ .main-nav{ max-height: 320px; }
   .nav-toggle:checked ~ .nav-toggle-label span{ background:transparent; }
   .nav-toggle:checked ~ .nav-toggle-label span::before{ top:0; transform: rotate(45deg); }
   .nav-toggle:checked ~ .nav-toggle-label span::after{ top:0; transform: rotate(-45deg); }
@@ -305,7 +267,7 @@ button{ font-family: inherit; }
   z-index:0;
   pointer-events:none;
 }
-.hero-art svg{ width:100%; height:100%; }
+.hero-art img{ width:100%; height:100%; object-fit:cover; object-position: 82% 38%; }
 .hero-art::after{
   content:"";
   position:absolute; inset:0;
@@ -788,39 +750,11 @@ button{ font-family: inherit; }
 </head>
 <body>
 
-<!-- Definição única do logo AABB Ipiaú-BA, reaproveitada no header e no rodapé via <use> -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <clipPath id="crestClip"><circle cx="100" cy="100" r="100"/></clipPath>
-    <radialGradient id="crestBg" cx="35%" cy="28%" r="85%">
-      <stop offset="0%" stop-color="#0B57B0"/>
-      <stop offset="55%" stop-color="#003B8E"/>
-      <stop offset="100%" stop-color="#001C4D"/>
-    </radialGradient>
-    <path id="crestArcPath" d="M28,80 A74,74 0 0 1 172,80" fill="none"/>
-    <symbol id="logo-aabb-ipiau" viewBox="0 0 200 200">
-      <g clip-path="url(#crestClip)">
-        <rect x="0" y="0" width="200" height="200" fill="url(#crestBg)"/>
-        <text class="crest-arc">
-          <textPath href="#crestArcPath" startOffset="50%" text-anchor="middle">ASSOCIAÇÃO ATLÉTICA BANCO DO BRASIL</textPath>
-        </text>
-        <text class="crest-main" x="100" y="120" text-anchor="middle">AABB</text>
-        <rect x="0" y="150" width="200" height="34" fill="#FFCC00"/>
-        <text class="crest-city" x="100" y="173" text-anchor="middle">IPIAÚ-BA</text>
-      </g>
-    </symbol>
-  </defs>
-</svg>
-
 <!-- ============ HEADER ============ -->
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="#topo">
-      <svg class="crest" viewBox="0 0 200 200" role="img" aria-label="Logotipo AABB Ipiaú-BA"><use href="#logo-aabb-ipiau"/></svg>
-      <span class="brand-text">
-        <strong>AABB Ipiaú</strong>
-        <span>Associação Atlética</span>
-      </span>
+      <img class="crest" src="logo-aabb-ipiau.jpeg" alt="Logotipo AABB Ipiaú-BA">
     </a>
 
     <input type="checkbox" id="nav-toggle" class="nav-toggle">
@@ -833,70 +767,15 @@ button{ font-family: inherit; }
         <li><a href="#eventos">Eventos</a></li>
         <li><a href="#contato">Contato</a></li>
       </ul>
-      <div class="nav-cta">
-        <a href="#planos" class="btn btn-blue">Seja um Sócio</a>
-      </div>
     </nav>
   </div>
 </header>
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="topo">
-  <!-- Ilustração vetorial da fachada e da piscina do clube -->
+  <!-- Foto real da fachada e da piscina do clube -->
   <div class="hero-art" aria-hidden="true">
-    <svg viewBox="0 0 640 520" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="skyFade" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#1667C7"/>
-          <stop offset="100%" stop-color="#013D8F"/>
-        </linearGradient>
-        <linearGradient id="poolWater" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#4FA9F5"/>
-          <stop offset="100%" stop-color="#0F72D6"/>
-        </linearGradient>
-      </defs>
-
-      <rect x="0" y="0" width="640" height="520" fill="url(#skyFade)"/>
-
-      <circle cx="540" cy="90" r="46" fill="#FFD84D" opacity="0.9"/>
-      <g stroke="#FFD84D" stroke-width="4" stroke-linecap="round" opacity="0.7">
-        <line x1="540" y1="18" x2="540" y2="2"/>
-        <line x1="600" y1="90" x2="618" y2="90"/>
-        <line x1="583" y1="47" x2="596" y2="34"/>
-        <line x1="583" y1="133" x2="596" y2="146"/>
-      </g>
-
-      <rect x="360" y="160" width="220" height="220" rx="6" fill="#F5F8FC" opacity="0.94"/>
-      <rect x="360" y="160" width="220" height="34" fill="#00306E"/>
-      <text x="470" y="184" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="16" fill="#FFCC00" letter-spacing="1">AABB</text>
-      <g fill="#0B4FA0" opacity="0.85">
-        <rect x="378" y="212" width="34" height="34" rx="3"/>
-        <rect x="424" y="212" width="34" height="34" rx="3"/>
-        <rect x="470" y="212" width="34" height="34" rx="3"/>
-        <rect x="516" y="212" width="34" height="34" rx="3"/>
-        <rect x="378" y="258" width="34" height="34" rx="3"/>
-        <rect x="424" y="258" width="34" height="34" rx="3"/>
-        <rect x="470" y="258" width="34" height="34" rx="3"/>
-        <rect x="516" y="258" width="34" height="34" rx="3"/>
-      </g>
-      <rect x="440" y="320" width="60" height="60" fill="#0B4FA0" opacity="0.5"/>
-
-      <path d="M60 460 C 55 400 65 360 62 320" fill="none" stroke="#0A3E82" stroke-width="6" stroke-linecap="round"/>
-      <g fill="#0F72D6" opacity="0.85">
-        <path d="M62 320 C 20 300 10 330 5 350 C 30 345 50 335 62 320Z"/>
-        <path d="M62 320 C 104 300 114 330 119 350 C 94 345 74 335 62 320Z"/>
-        <path d="M62 320 C 40 285 55 260 62 245 C 74 265 82 295 62 320Z"/>
-      </g>
-
-      <rect x="0" y="400" width="640" height="120" fill="#E7EFFA" opacity="0.9"/>
-      <rect x="40" y="415" width="560" height="80" rx="18" fill="url(#poolWater)"/>
-      <g stroke="#DCEEFF" stroke-width="3" opacity="0.6" fill="none">
-        <path d="M60 435 q15 8 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0"/>
-        <path d="M60 460 q15 8 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0"/>
-        <path d="M60 480 q15 8 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0"/>
-      </g>
-      <line x1="320" y1="415" x2="320" y2="495" stroke="#FFCC00" stroke-width="3" stroke-dasharray="6 6" opacity="0.8"/>
-    </svg>
+    <img src="hero-fachada.jpeg" alt="">
   </div>
 
   <div class="wrap">
@@ -1332,7 +1211,7 @@ button{ font-family: inherit; }
 <footer class="site-footer">
   <div class="wrap footer-grid">
     <div class="footer-brand">
-      <svg class="crest" viewBox="0 0 200 200" role="img" aria-label="Logotipo AABB Ipiaú-BA"><use href="#logo-aabb-ipiau"/></svg>
+      <img class="crest" src="logo-aabb-ipiau.jpeg" alt="Logotipo AABB Ipiaú-BA">
       <p>Associação Atlética Banco do Brasil — tradição em esporte, lazer e convivência em família há mais de quatro décadas.</p>
       <div class="social-row">
         <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="3.6"/><circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/></svg></a>
