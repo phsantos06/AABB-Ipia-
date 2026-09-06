@@ -750,7 +750,7 @@ button{ font-family: inherit; }
      o degradê cobre uma fatia maior da largura no mobile porque
      o bloco de texto ocupa proporcionalmente mais espaço aqui ---- */
   .hero .wrap{
-    padding-block: 5rem 2.5rem;
+    padding-block: 5rem 2rem;
     gap: 1.25rem;
   }
   .hero-eyebrow{ font-size:.68rem; }
@@ -784,15 +784,15 @@ button{ font-family: inherit; }
      da proporção muito alta e estreita. Com uma altura própria,
      o recorte fica natural e dá pra ver a placa "AABB" e um
      pouco da estrutura ao fundo, sem ampliar além do necessário */
-  .hero-art{ top:0; left:0; right:0; bottom:auto; height:43rem; }
+  .hero-art{ top:0; left:0; right:0; bottom:auto; height:40rem; }
   .hero-art img{ object-position: 88% center; }
   .hero-art::after{
     background: linear-gradient(100deg,
       var(--blue-deep) 0%,
-      var(--blue-deep) 42%,
-      rgba(1,61,143,0.85) 58%,
-      rgba(1,61,143,0.35) 72%,
-      transparent 88%);
+      var(--blue-deep) 48%,
+      rgba(1,61,143,0.88) 63%,
+      rgba(1,61,143,0.4) 76%,
+      transparent 90%);
   }
 
   /* ---- Estatísticas: card "vidro" destacado sobre o azul do
@@ -801,13 +801,13 @@ button{ font-family: inherit; }
   .stat-strip{
     background:transparent;
     border-top:none;
-    padding-block: 0 2.5rem;
+    padding-block: 0 2rem;
   }
   .stat-strip .wrap{
     position:relative;
     padding: 1.5rem 1rem;
     margin-inline: clamp(1.25rem, 4vw, 2.5rem);
-    background: rgba(0,32,80,0.82);
+    background: rgba(0,24,64,0.92);
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: var(--radius);
   }
