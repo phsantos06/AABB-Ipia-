@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>AABB Ipiaú</title>
 
 <!-- Google Fonts: Big Shoulders (placar/estádio, títulos), Source Sans 3 (leitura), IBM Plex Mono (números/rótulos) -->
@@ -734,35 +734,45 @@ button{ font-family: inherit; }
 .wa-float svg{ width:28px; height:28px; }
 
 /* =========================================================
-   MOBILE (≤768px) — hero e rodapé refeitos como blocos/cards
-   com respiro, em vez de faixas coladas na borda da tela
+   MOBILE (≤768px) — hero, header e rodapé refeitos como blocos
+   pensados para celular, com respiro e hierarquia próprios
    ========================================================= */
 @media (max-width: 768px){
-  /* Hero: texto e CTAs primeiro, depois a foto do clube dentro do
-     seu próprio card (não mais um fundo cortado atrás do texto) */
+  /* ---- Header: mais compacto, nada encostado na borda ---- */
+  .site-header .wrap{ height:64px; }
+  .crest{ width:48px; height:48px; }
+  .nav-toggle-label{ width:38px; height:38px; }
+  .main-nav{ top:64px; }
+
+  /* ---- Hero: texto e CTAs primeiro, depois a foto do clube
+     dentro do seu próprio card (não mais um fundo cortado atrás
+     do texto) — altura total muito menor que antes ---- */
   .hero{
     display:flex;
     flex-direction:column;
   }
   .hero > .wrap{
     order:1;
-    padding-block: 6.5rem 0;
+    padding-block: 5rem 0;
     gap: 1.25rem;
   }
   .hero-eyebrow{ font-size:.68rem; }
   .hero h1{
     font-size: 1.85rem;
+    line-height:1.1;
     max-width: none;
     margin-top: .5rem;
   }
   .hero p.lede{
     font-size: .96rem;
-    margin-top: .25rem;
+    line-height:1.5;
+    max-width: 34em;
+    margin-top: .75rem;
   }
   .hero-ctas{
     flex-direction: column;
     align-items: stretch;
-    margin-top: .75rem;
+    margin-top: 1rem;
     gap: .75rem;
   }
   .hero-ctas .btn{ width:100%; }
@@ -783,8 +793,8 @@ button{ font-family: inherit; }
   .hero-art::after{ display:none; }
   .hero::after{ display:none; }
 
-  /* Estatísticas: card "vidro" destacado sobre o azul do hero,
-     em vez de uma faixa cheia colada de ponta a ponta */
+  /* ---- Estatísticas: card "vidro" destacado sobre o azul do
+     hero, em 2 colunas, em vez de faixa cheia de ponta a ponta ---- */
   .stat-strip{
     order:3;
     background:transparent;
@@ -792,7 +802,7 @@ button{ font-family: inherit; }
     padding-block: 2rem 2.5rem;
   }
   .stat-strip .wrap{
-    padding: 1.5rem;
+    padding: 1.5rem 1rem;
     margin-inline: clamp(1.25rem, 4vw, 2.5rem);
     background: rgba(0,45,110,0.5);
     backdrop-filter: blur(10px);
@@ -800,10 +810,14 @@ button{ font-family: inherit; }
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: var(--radius);
   }
+  .stat span{ font-size:.68rem; }
 
-  /* Estrutura/Eventos: cards viram um carrossel horizontal com
-     snap — evita a repetição visual de vários blocos idênticos
-     empilhados e deixa o scroll inicial bem mais curto */
+  /* ---- Estrutura/Eventos: título e texto de apresentação mais
+     compactos e com linhas curtas; cards em carrossel horizontal
+     com snap — evita repetir vários blocos idênticos empilhados
+     e encurta bastante o scroll inicial ---- */
+  .page-banner{ padding-block: 2rem 2.25rem; }
+  .page-banner p{ max-width:30ch; font-size:.94rem; }
   .tile-grid{
     display:flex;
     overflow-x:auto;
@@ -819,10 +833,10 @@ button{ font-family: inherit; }
   }
   .swipe-hint{ display:flex; }
 
-  /* Fale Conosco: em vez de uma faixa amarela cheia de ponta a
-     ponta, o fundo da seção acompanha o azul contínuo da página e
-     o conteúdo vira um card dourado solto, com cantos bem
-     arredondados e margem lateral */
+  /* ---- Fale Conosco: em vez de uma faixa amarela cheia de
+     ponta a ponta, o fundo da seção acompanha o azul contínuo da
+     página e o conteúdo vira um card dourado solto, com cantos
+     bem arredondados e margem lateral ---- */
   .contact-band{
     background: var(--blue-deep);
     padding-block: 2.5rem;
@@ -838,14 +852,40 @@ button{ font-family: inherit; }
   }
   .contact-form{ padding: 1.5rem; }
 
-  /* Rodapé: blocos (logo, links, horário) com respiro entre si, e
-     espaço extra no fim para o botão do WhatsApp nunca cobrir texto */
-  .footer-grid{ gap: 1.5rem; }
-  .footer-bottom{ padding-bottom: 6rem; }
+  /* ---- Rodapé: tudo centralizado em coluna única, blocos com
+     respiro consistente entre si, links com área de toque maior ---- */
+  .footer-grid{ gap: 2rem; text-align:center; }
+  .footer-brand{ display:flex; flex-direction:column; align-items:center; }
+  .footer-brand p{ max-width:32ch; }
+  .social-row{ justify-content:center; }
+  .footer-links a{ display:inline-block; padding:.35rem 0; }
+  .footer-grid > div > ul:not(.footer-links) li{ padding-block:.15rem; }
+  .footer-bottom{ justify-content:center; text-align:center; padding-bottom: 6rem; }
 
-  /* Botão flutuante um pouco mais discreto no mobile */
-  .wa-float{ width:52px; height:52px; right:1.25rem; bottom:1.25rem; }
+  /* ---- Botão flutuante do WhatsApp: menor, mais discreto, e
+     respeitando a área segura de gestos do aparelho ---- */
+  .wa-float{
+    width:52px; height:52px;
+    right: calc(1.25rem + env(safe-area-inset-right, 0px));
+    bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  }
   .wa-float svg{ width:24px; height:24px; }
+}
+
+/* =========================================================
+   TELAS MUITO PEQUENAS (≤380px) — ajuste fino para aparelhos
+   como iPhone SE, Galaxy A01 etc.
+   ========================================================= */
+@media (max-width: 380px){
+  .hero > .wrap{ padding-block: 4.5rem 0; }
+  .hero h1{ font-size: 1.55rem; }
+  .hero p.lede{ font-size:.92rem; }
+  .btn{ padding: .8rem 1.3rem; font-size:.92rem; }
+  .stat-strip .wrap{ padding: 1.15rem .85rem; gap: 1.25rem .75rem; }
+  .stat strong{ font-size: 1.4rem; }
+  .stat span{ font-size:.62rem; }
+  .contact-layout{ padding: 1.15rem; margin-inline:.75rem; }
+  .contact-form{ padding: 1.15rem; }
 }
 
 @media (prefers-reduced-motion: reduce){
