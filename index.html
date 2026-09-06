@@ -749,8 +749,9 @@ button{ font-family: inherit; }
      tipografia e proporções pensadas para telas estreitas —
      o degradê cobre uma fatia maior da largura no mobile porque
      o bloco de texto ocupa proporcionalmente mais espaço aqui ---- */
+  .hero{ min-height:680px; }
   .hero .wrap{
-    padding-block: 5rem 3rem;
+    padding-block: 4.5rem 3rem;
     gap: 1.25rem;
   }
   .hero-eyebrow{ font-size:.68rem; }
@@ -760,7 +761,7 @@ button{ font-family: inherit; }
   .hero::after{ display:none; }
   .hero h1{
     font-size: 1.85rem;
-    line-height:1.1;
+    line-height:1.05;
     max-width: none;
     margin-top: .5rem;
   }
@@ -789,12 +790,10 @@ button{ font-family: inherit; }
   .hero-art::after{
     background:
       linear-gradient(180deg, transparent 72%, var(--blue-deep) 100%),
-      linear-gradient(100deg,
-        var(--blue-deep) 0%,
-        var(--blue-deep) 48%,
-        rgba(1,61,143,0.88) 63%,
-        rgba(1,61,143,0.4) 76%,
-        transparent 90%);
+      linear-gradient(90deg,
+        rgba(0,45,110,0.90) 0%,
+        rgba(0,55,125,0.72) 45%,
+        rgba(0,55,125,0.30) 100%);
   }
 
   /* ---- Estatísticas: card "vidro" destacado sobre o azul do
@@ -809,7 +808,7 @@ button{ font-family: inherit; }
     position:relative;
     padding: 1.5rem 1rem;
     margin-inline: clamp(1.25rem, 4vw, 2.5rem);
-    background: rgba(0,24,64,0.92);
+    background: rgba(0,35,90,0.88);
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: var(--radius);
   }
@@ -903,9 +902,10 @@ button{ font-family: inherit; }
    como iPhone SE, Galaxy A01 etc.
    ========================================================= */
 @media (max-width: 380px){
-  .hero .wrap{ padding-block: 4.5rem 2rem; }
+  .hero{ min-height:640px; }
+  .hero .wrap{ padding-block: 4rem 2rem; }
   .hero h1{ font-size: 1.55rem; }
-  .hero p.lede{ font-size:.92rem; }
+  .hero p.lede{ font-size:.95rem; }
   .btn{ padding: .8rem 1.3rem; font-size:.92rem; }
   .stat-strip .wrap{ padding: 1.15rem .85rem; gap: 1.25rem .75rem; }
   .stat strong{ font-size: 1.4rem; }
