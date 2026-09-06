@@ -734,50 +734,19 @@ button{ font-family: inherit; }
 .wa-float svg{ width:28px; height:28px; }
 
 /* =========================================================
-   MOBILE (≤768px) — hero empilhado, hierarquia e espaçamento
-   revisados para a apresentação ao cliente
+   MOBILE (≤768px) — hero e rodapé refeitos como blocos/cards
+   com respiro, em vez de faixas coladas na borda da tela
    ========================================================= */
 @media (max-width: 768px){
-  /* Hero: foto do clube em faixa própria no topo (16:9, sem cortar
-     o essencial), textos e CTAs num bloco azul limpo logo abaixo */
-  .hero-art{
-    position: relative;
-    inset: auto;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    max-height: 320px;
-    overflow: hidden;
-  }
-  .hero-art img{ width:100%; height:100%; object-fit:cover; object-position: center 62%; }
-  .hero-art::after{
-    background: linear-gradient(180deg,
-      rgba(0,45,110,0.6) 0%,
-      transparent 20%,
-      rgba(0,45,110,0.22) 58%,
-      rgba(0,45,110,0.75) 82%,
-      var(--blue-deep) 96%);
-  }
-  .hero::after{ display:none; }
-
-  /* Estrutura/Eventos: cards viram um carrossel horizontal com
-     snap — evita a repetição visual de vários blocos idênticos
-     empilhados e deixa o scroll inicial bem mais curto */
-  .tile-grid{
+  /* Hero: texto e CTAs primeiro, depois a foto do clube dentro do
+     seu próprio card (não mais um fundo cortado atrás do texto) */
+  .hero{
     display:flex;
-    overflow-x:auto;
-    scroll-snap-type: x mandatory;
-    gap: 1rem;
-    padding-bottom:.25rem;
-    scrollbar-width:none;
+    flex-direction:column;
   }
-  .tile-grid::-webkit-scrollbar{ display:none; }
-  .photo-tile, .tile-grid .calendar-widget{
-    flex: 0 0 82%;
-    scroll-snap-align: start;
-  }
-  .swipe-hint{ display:flex; }
-  .hero .wrap{
-    padding-block: 2rem 2.5rem;
+  .hero > .wrap{
+    order:1;
+    padding-block: 6.5rem 0;
     gap: 1.25rem;
   }
   .hero-eyebrow{ font-size:.68rem; }
@@ -799,12 +768,83 @@ button{ font-family: inherit; }
   .hero-ctas .btn{ width:100%; }
   .hero-trust{ display:none; }
 
-  /* Rodapé: espaço extra para o botão flutuante do WhatsApp nunca
-     cobrir a última linha de texto */
-  .footer-bottom{ padding-bottom: 5.5rem; }
+  .hero-art{
+    order:2;
+    position:relative;
+    inset:auto;
+    width:auto;
+    height:13rem;
+    margin: 1.5rem clamp(1.25rem, 4vw, 2.5rem) 0;
+    border-radius: var(--radius);
+    overflow:hidden;
+    box-shadow: 0 20px 40px -16px rgba(0,10,35,0.55);
+  }
+  .hero-art img{ width:100%; height:100%; object-fit:cover; object-position: center 62%; }
+  .hero-art::after{ display:none; }
+  .hero::after{ display:none; }
+
+  /* Estatísticas: card "vidro" destacado sobre o azul do hero,
+     em vez de uma faixa cheia colada de ponta a ponta */
+  .stat-strip{
+    order:3;
+    background:transparent;
+    border-top:none;
+    padding-block: 2rem 2.5rem;
+  }
+  .stat-strip .wrap{
+    padding: 1.5rem;
+    margin-inline: clamp(1.25rem, 4vw, 2.5rem);
+    background: rgba(0,45,110,0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius);
+  }
+
+  /* Estrutura/Eventos: cards viram um carrossel horizontal com
+     snap — evita a repetição visual de vários blocos idênticos
+     empilhados e deixa o scroll inicial bem mais curto */
+  .tile-grid{
+    display:flex;
+    overflow-x:auto;
+    scroll-snap-type: x mandatory;
+    gap: 1rem;
+    padding-bottom:.25rem;
+    scrollbar-width:none;
+  }
+  .tile-grid::-webkit-scrollbar{ display:none; }
+  .photo-tile, .tile-grid .calendar-widget{
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+  }
+  .swipe-hint{ display:flex; }
+
+  /* Fale Conosco: em vez de uma faixa amarela cheia de ponta a
+     ponta, o fundo da seção acompanha o azul contínuo da página e
+     o conteúdo vira um card dourado solto, com cantos bem
+     arredondados e margem lateral */
+  .contact-band{
+    background: var(--blue-deep);
+    padding-block: 2.5rem;
+  }
+  .contact-layout{
+    background: var(--gold);
+    color: var(--blue-deep);
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    margin-inline: 1rem;
+    box-shadow: 0 24px 48px -20px rgba(0,0,0,0.5);
+    gap: 2rem;
+  }
+  .contact-form{ padding: 1.5rem; }
+
+  /* Rodapé: blocos (logo, links, horário) com respiro entre si, e
+     espaço extra no fim para o botão do WhatsApp nunca cobrir texto */
+  .footer-grid{ gap: 1.5rem; }
+  .footer-bottom{ padding-bottom: 6rem; }
 
   /* Botão flutuante um pouco mais discreto no mobile */
-  .wa-float{ width:52px; height:52px; right:1rem; bottom:1rem; }
+  .wa-float{ width:52px; height:52px; right:1.25rem; bottom:1.25rem; }
   .wa-float svg{ width:24px; height:24px; }
 }
 
