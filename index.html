@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clube AABB</title>
+
+<!-- Google Fonts: Big Shoulders (placar/estádio, títulos), Source Sans 3 (leitura), IBM Plex Mono (números/rótulos) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+
+<style>
+/* =========================================================
+   TOKENS — paleta oficial AABB / Banco do Brasil
+   Azul predominante, dourado em detalhes, branco e cinza-escuro para texto.
+   Site institucional: tema único (claro), sem alternância dark/light.
+   ========================================================= */
+:root{
+  --blue-deep:   #002D6E;   /* azul institucional profundo — header, hero, rodapé */
+  --blue-royal:  #0056B3;   /* azul secundário — botões, links, destaques */
+  --blue-pale:   #EAF2FC;   /* azul muito claro — fundo de seções alternadas */
+  --gold:        #F5B700;   /* dourado BB — CTA primário, acentos */
+  --gold-deep:   #C9930A;   /* dourado escurecido — hover, sombras de acento */
+  --white:       #FFFFFF;
+  --ink:         #142339;   /* cinza-escuro com viés azul — texto principal */
+  --slate:       #56637A;   /* cinza médio azulado — texto secundário */
+  --line:        #D7E2F2;   /* bordas e divisores sutis */
+  --line-strong: #B9CBE6;   /* bordas de placeholders */
+
+  --font-display: "Big Shoulders Display", "Arial Narrow", sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "Consolas", monospace;
+
+  --radius: 14px;
+  --radius-sm: 8px;
+  --container: 1180px;
+  --shadow-card: 0 12px 28px -16px rgba(0,45,110,0.28);
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+body{
+  margin:0;
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+img{ max-width:100%; display:block; }
+a{ color: inherit; }
+h1,h2,h3,h4{
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.05;
+  text-wrap: balance;
+  margin: 0;
+  color: var(--blue-deep);
+}
+p{ margin:0; }
+ul{ margin:0; padding:0; list-style:none; }
+button{ font-family: inherit; }
+
+.wrap{
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+:focus-visible{
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.eyebrow{
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue-royal);
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+}
+.eyebrow::before{
+  content:"";
+  width: 22px; height: 3px;
+  background: var(--gold);
+  border-radius: 2px;
+  display:inline-block;
+}
+
+.section{
+  padding-block: clamp(3.25rem, 7vw, 5.5rem);
+}
+.section--pale{ background: var(--blue-pale); }
+
+.section-head{
+  display:flex;
+  flex-direction:column;
+  gap:.85rem;
+  max-width: 640px;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+.section-head h2{ font-size: clamp(1.9rem, 4vw, 2.6rem); }
+.section-head p{ color: var(--slate); font-size: 1.05rem; }
+
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.55rem;
+  padding: .9rem 1.7rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.98rem;
+  text-decoration:none;
+  border: 2px solid transparent;
+  cursor:pointer;
+  transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+  white-space: nowrap;
+}
+.btn:hover{ transform: translateY(-2px); }
+.btn-gold{
+  background: var(--gold);
+  color: var(--blue-deep);
+  box-shadow: 0 10px 22px -10px rgba(245,183,0,0.55);
+}
+.btn-gold:hover{ background:#FFC933; }
+.btn-blue{
+  background: var(--blue-royal);
+  color: var(--white);
+  box-shadow: 0 10px 22px -10px rgba(0,86,179,0.55);
+}
+.btn-blue:hover{ background:#0063CC; }
+.btn-outline{
+  background: transparent;
+  border-color: rgba(255,255,255,0.55);
+  color: var(--white);
+}
+.btn-outline:hover{ background: rgba(255,255,255,0.12); }
+.btn-ghost{
+  background: var(--white);
+  border-color: var(--line-strong);
+  color: var(--blue-deep);
+}
+.btn-ghost:hover{ border-color: var(--blue-royal); }
+.btn-block{ width:100%; }
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.site-header{
+  position: sticky;
+  top:0;
+  z-index: 50;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.site-header .wrap{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height: 76px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:.7rem;
+  text-decoration:none;
+}
+.crest{
+  width: 46px; height:46px;
+  border-radius:50%;
+  background: radial-gradient(circle at 32% 28%, var(--blue-royal), var(--blue-deep) 72%);
+  border: 3px solid var(--gold);
+  display:flex; align-items:center; justify-content:center;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight:800;
+  font-size: .95rem;
+  letter-spacing: .02em;
+  flex-shrink:0;
+}
+.brand-text{ display:flex; flex-direction:column; line-height:1.1; }
+.brand-text strong{
+  font-family: var(--font-display);
+  font-size:1.15rem;
+  color: var(--blue-deep);
+  font-weight:800;
+}
+.brand-text span{
+  font-family: var(--font-mono);
+  font-size:.62rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color: var(--slate);
+}
+
+.nav-toggle{ display:none; }
+.nav-toggle-label{
+  display:none;
+  width: 42px; height:42px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--line-strong);
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+.nav-toggle-label span,
+.nav-toggle-label span::before,
+.nav-toggle-label span::after{
+  content:"";
+  display:block;
+  width: 20px; height:2px;
+  background: var(--blue-deep);
+  border-radius:2px;
+  position:relative;
+  transition: transform .2s ease, opacity .2s ease;
+}
+.nav-toggle-label span::before{ position:absolute; top:-6px; }
+.nav-toggle-label span::after{ position:absolute; top:6px; }
+
+.main-nav ul{ display:flex; align-items:center; gap: 2.1rem; }
+.main-nav a{
+  text-decoration:none;
+  color: var(--ink);
+  font-weight:600;
+  font-size:.96rem;
+  position:relative;
+  padding-block:.3rem;
+}
+.main-nav a::after{
+  content:"";
+  position:absolute; left:0; right:100%; bottom:-2px;
+  height:2px; background: var(--gold);
+  transition: right .2s ease;
+}
+.main-nav a:hover::after{ right:0; }
+.nav-cta{ display:flex; }
+
+@media (max-width: 860px){
+  .nav-toggle-label{ display:flex; }
+  .main-nav{
+    position:absolute;
+    top:76px; left:0; right:0;
+    background: var(--white);
+    border-bottom:1px solid var(--line);
+    max-height:0;
+    overflow:hidden;
+    transition: max-height .28s ease;
+  }
+  .main-nav ul{
+    flex-direction:column;
+    align-items:stretch;
+    gap:0;
+    padding: .5rem clamp(1.25rem,4vw,2.5rem) 1.25rem;
+  }
+  .main-nav li{ border-bottom:1px solid var(--line); }
+  .main-nav a{ display:block; padding:.9rem 0; }
+  .main-nav a::after{ display:none; }
+  .nav-cta{ padding-top:1rem; }
+  .nav-toggle:checked ~ .main-nav{ max-height: 420px; }
+  .nav-toggle:checked ~ .nav-toggle-label span{ background:transparent; }
+  .nav-toggle:checked ~ .nav-toggle-label span::before{ top:0; transform: rotate(45deg); }
+  .nav-toggle:checked ~ .nav-toggle-label span::after{ top:0; transform: rotate(-45deg); }
+}
+
+/* =========================================================
+   HERO — fundo em "raias de piscina" (identidade esportiva)
+   ========================================================= */
+.hero{
+  position:relative;
+  background: linear-gradient(158deg, var(--blue-deep) 0%, #013D8F 58%, var(--blue-royal) 100%);
+  color: var(--white);
+  overflow:hidden;
+}
+.hero::before{
+  content:"";
+  position:absolute; inset:0;
+  background: repeating-linear-gradient(
+    115deg,
+    rgba(255,255,255,0.07) 0px,
+    rgba(255,255,255,0.07) 2px,
+    transparent 2px,
+    transparent 74px
+  );
+  pointer-events:none;
+}
+.hero::after{
+  content:"";
+  position:absolute; right:-12%; top:-18%;
+  width:520px; height:520px;
+  background: radial-gradient(circle, rgba(245,183,0,0.16), transparent 68%);
+  pointer-events:none;
+}
+.hero .wrap{
+  position:relative;
+  padding-block: clamp(3.5rem, 8vw, 6rem) clamp(2.5rem, 6vw, 4rem);
+  display:grid;
+  gap: 2.5rem;
+}
+.hero-eyebrow{
+  font-family: var(--font-mono);
+  font-size:.72rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color: var(--gold);
+  display:flex; align-items:center; gap:.6rem;
+}
+.hero-eyebrow::before{ content:"●"; font-size:.5rem; }
+.hero h1{
+  color: var(--white);
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  max-width: 15ch;
+  margin-top: 1rem;
+}
+.hero h1 em{
+  font-style:normal;
+  color: var(--gold);
+}
+.hero p.lede{
+  margin-top: 1.1rem;
+  max-width: 46ch;
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  color: rgba(255,255,255,0.86);
+}
+.hero-ctas{
+  margin-top: 1.9rem;
+  display:flex;
+  flex-wrap:wrap;
+  gap: 1rem;
+}
+.hero-trust{
+  margin-top: 2.6rem;
+  display:flex;
+  flex-wrap:wrap;
+  gap: .6rem 1.8rem;
+}
+.hero-trust li{
+  display:flex; align-items:center; gap:.55rem;
+  font-size:.88rem;
+  color: rgba(255,255,255,0.82);
+}
+.hero-trust svg{ width:18px; height:18px; color: var(--gold); flex-shrink:0; }
+
+/* placar de números — estatísticas do clube */
+.stat-strip{
+  position:relative;
+  background: var(--blue-deep);
+  border-top: 1px solid rgba(255,255,255,0.14);
+}
+.stat-strip .wrap{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  padding-block: 2rem;
+}
+.stat{ text-align:center; }
+.stat strong{
+  display:block;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+  font-weight:600;
+  color: var(--gold);
+}
+.stat span{
+  display:block;
+  margin-top:.35rem;
+  font-size:.76rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color: rgba(255,255,255,0.72);
+}
+@media (max-width: 700px){
+  .stat-strip .wrap{ grid-template-columns: repeat(2,1fr); row-gap:1.75rem; }
+}
+
+/* =========================================================
+   PLACEHOLDERS DE IMAGEM — sistema visual único
+   ========================================================= */
+.ph{
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, var(--blue-pale) 0%, #F6F9FD 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:.6rem;
+  text-align:center;
+  padding: 1.25rem;
+  color: var(--slate);
+}
+.ph svg{ width: 2.1rem; height:2.1rem; color: var(--blue-royal); }
+.ph-label{
+  font-family: var(--font-mono);
+  font-size:.66rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color: var(--slate);
+}
+.ph-dim{
+  font-family: var(--font-mono);
+  font-size:.7rem;
+  color: var(--blue-royal);
+  font-weight:600;
+}
+
+/* =========================================================
+   ATRAÇÕES — grid de cards
+   ========================================================= */
+.card-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+.attr-card{
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow:hidden;
+  box-shadow: var(--shadow-card);
+  display:flex;
+  flex-direction:column;
+}
+.attr-card .ph{
+  border:none;
+  border-radius:0;
+  aspect-ratio: 4 / 3;
+}
+.attr-card .attr-body{
+  padding: 1.35rem 1.4rem 1.6rem;
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+}
+.icon-badge{
+  width:44px; height:44px;
+  border-radius: 10px;
+  background: var(--blue-pale);
+  display:flex; align-items:center; justify-content:center;
+  color: var(--blue-royal);
+  margin-bottom:.3rem;
+}
+.icon-badge svg{ width:24px; height:24px; }
+.attr-card h3{
+  font-size:1.15rem;
+  color: var(--ink);
+  font-weight:700;
+  font-family: var(--font-body);
+}
+.attr-card p{ color: var(--slate); font-size:.94rem; }
+
+/* =========================================================
+   PLANOS — tabela comparativa em formato "placar"
+   ========================================================= */
+.plans-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.75rem;
+  align-items:start;
+}
+.plan-card{
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 2rem 1.75rem;
+  display:flex;
+  flex-direction:column;
+  gap: 1.4rem;
+  box-shadow: var(--shadow-card);
+  position:relative;
+}
+.plan-card.is-featured{
+  border: 2px solid var(--gold);
+  transform: translateY(-14px);
+  box-shadow: 0 20px 38px -16px rgba(245,183,0,0.4);
+}
+.plan-ribbon{
+  position:absolute;
+  top:-14px; left:50%;
+  transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--blue-deep);
+  font-family: var(--font-mono);
+  font-size:.66rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  font-weight:700;
+  padding: .4rem 1rem;
+  border-radius: 999px;
+  white-space:nowrap;
+}
+.plan-name{
+  font-family: var(--font-mono);
+  font-size:.72rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color: var(--blue-royal);
+  font-weight:600;
+}
+.plan-title{ font-size:1.5rem; color: var(--ink); }
+.plan-price{
+  display:flex;
+  align-items:baseline;
+  gap:.4rem;
+}
+.plan-price strong{
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  color: var(--blue-deep);
+  font-variant-numeric: tabular-nums;
+}
+.plan-price span{ color: var(--slate); font-size:.9rem; }
+.plan-features{ display:flex; flex-direction:column; gap:.75rem; }
+.plan-features li{
+  display:flex;
+  align-items:flex-start;
+  gap:.6rem;
+  font-size:.92rem;
+  color: var(--ink);
+}
+.plan-features svg{
+  width:18px; height:18px;
+  color: var(--blue-royal);
+  flex-shrink:0;
+  margin-top:.1rem;
+}
+.plans-note{
+  margin-top: 1.75rem;
+  font-size:.82rem;
+  color: var(--slate);
+  font-style:italic;
+}
+
+/* =========================================================
+   EVENTOS
+   ========================================================= */
+.events-layout{
+  display:grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 3rem;
+  align-items:center;
+}
+.events-copy .section-head{ margin-bottom: 1.4rem; }
+.events-list{ display:flex; flex-direction:column; gap:.9rem; margin-bottom: 2rem; }
+.events-list li{
+  display:flex; gap:.7rem; align-items:flex-start;
+  font-size:.98rem; color: var(--ink);
+}
+.events-list svg{ width:20px; height:20px; color: var(--gold-deep); flex-shrink:0; margin-top:.15rem; }
+.events-media .ph{ aspect-ratio: 16/10; }
+
+@media (max-width: 860px){
+  .events-layout{ grid-template-columns:1fr; }
+  .events-media{ order:-1; }
+}
+
+/* =========================================================
+   RODAPÉ
+   ========================================================= */
+.site-footer{
+  background: var(--blue-deep);
+  color: rgba(255,255,255,0.85);
+  border-top: 4px solid var(--gold);
+}
+.footer-grid{
+  display:grid;
+  grid-template-columns: 1.3fr 1fr 1fr 1fr;
+  gap: 2.5rem;
+  padding-block: clamp(2.75rem, 6vw, 4rem) 2rem;
+}
+.footer-grid h4{
+  color: var(--white);
+  font-size: .82rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  font-family: var(--font-mono);
+  font-weight:600;
+  margin-bottom: 1rem;
+}
+.footer-grid p, .footer-grid li{
+  font-size:.92rem;
+  color: rgba(255,255,255,0.72);
+  line-height:1.7;
+}
+.footer-brand .crest{ margin-bottom:1rem; }
+.footer-brand p{ max-width:32ch; }
+.social-row{ display:flex; gap:.7rem; margin-top:1.1rem; }
+.social-row a{
+  width:38px; height:38px;
+  border-radius:50%;
+  border:1.5px solid rgba(255,255,255,0.28);
+  display:flex; align-items:center; justify-content:center;
+  color: var(--white);
+  text-decoration:none;
+  transition: background .15s ease, border-color .15s ease;
+}
+.social-row a:hover{ background: var(--gold); border-color: var(--gold); color: var(--blue-deep); }
+.social-row svg{ width:17px; height:17px; }
+.footer-bottom{
+  border-top: 1px solid rgba(255,255,255,0.14);
+  padding-block: 1.4rem;
+  display:flex;
+  flex-wrap:wrap;
+  gap: .75rem 1.5rem;
+  justify-content:space-between;
+  font-size:.8rem;
+  color: rgba(255,255,255,0.55);
+}
+@media (max-width: 860px){
+  .footer-grid{ grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px){
+  .footer-grid{ grid-template-columns: 1fr; }
+}
+
+/* =========================================================
+   WHATSAPP FLUTUANTE
+   ========================================================= */
+.wa-float{
+  position:fixed;
+  right: 1.25rem; bottom: 1.25rem;
+  width:60px; height:60px;
+  border-radius:50%;
+  background: var(--gold);
+  color: var(--blue-deep);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 14px 30px -10px rgba(245,183,0,0.6);
+  z-index: 60;
+  text-decoration:none;
+  transition: transform .15s ease;
+}
+.wa-float:hover{ transform: scale(1.07); }
+.wa-float svg{ width:28px; height:28px; }
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  .btn, .wa-float, .main-nav a::after{ transition:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#topo">
+      <span class="crest">AABB</span>
+      <span class="brand-text">
+        <strong>AABB</strong>
+        <span>Associação Atlética</span>
+      </span>
+    </a>
+
+    <input type="checkbox" id="nav-toggle" class="nav-toggle">
+    <label for="nav-toggle" class="nav-toggle-label" aria-label="Abrir menu"><span></span></label>
+
+    <nav class="main-nav">
+      <ul>
+        <li><a href="#estrutura">Estrutura</a></li>
+        <li><a href="#planos">Planos</a></li>
+        <li><a href="#eventos">Eventos</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="#planos" class="btn btn-blue">Seja um Sócio</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="topo">
+  <div class="wrap">
+    <div>
+      <p class="hero-eyebrow">AABB · Clube dos Associados</p>
+      <h1>Seu refúgio de <em>Lazer, Esporte</em> e Família em [Nome da Cidade]</h1>
+      <p class="lede">A estrutura completa que você e sua família merecem: piscinas, quadras, campo e espaços para celebrar — tudo em um só lugar, com a tradição AABB.</p>
+
+      <div class="hero-ctas">
+        <a href="#planos" class="btn btn-gold">Seja um Sócio</a>
+        <a href="#eventos" class="btn btn-outline">Reserve seu Evento</a>
+      </div>
+
+      <ul class="hero-trust">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg> Associe-se 100% online</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg> Reservas de espaço sem sair de casa</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg> Dúvidas comuns respondidas na hora</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="stat-strip">
+    <div class="wrap">
+      <div class="stat"><strong>48+</strong><span>Anos de tradição</span></div>
+      <div class="stat"><strong>1.200+</strong><span>Famílias associadas</span></div>
+      <div class="stat"><strong>35 mil m²</strong><span>De área de lazer</span></div>
+      <div class="stat"><strong>12</strong><span>Modalidades esportivas</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ESTRUTURA / ATRAÇÕES ============ -->
+<section class="section" id="estrutura">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Nossa estrutura</p>
+      <h2>Tudo o que sua família precisa, em um só endereço</h2>
+      <p>Da natação ao futebol, do churrasco de domingo à festa de aniversário — conheça os espaços que fazem da AABB o point da cidade.</p>
+    </div>
+
+    <div class="card-grid">
+
+      <!-- Piscinas -->
+      <article class="attr-card">
+        <div class="ph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="17.5" cy="6.5" r="2.2"/>
+            <path d="M2 13c1.5 1.3 3 1.3 4.5 0s3-1.3 4.5 0 3 1.3 4.5 0 3-1.3 4.5 0"/>
+            <path d="M2 18c1.5 1.3 3 1.3 4.5 0s3-1.3 4.5 0 3 1.3 4.5 0 3-1.3 4.5 0"/>
+          </svg>
+          <span class="ph-label">Foto sugerida</span>
+          <span class="ph-dim">1200 × 900 px</span>
+        </div>
+        <div class="attr-body">
+          <span class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="17.5" cy="6.5" r="2"/>
+              <path d="M2 13c1.5 1.3 3 1.3 4.5 0s3-1.3 4.5 0 3 1.3 4.5 0 3-1.3 4.5 0"/>
+              <path d="M2 18c1.5 1.3 3 1.3 4.5 0s3-1.3 4.5 0 3 1.3 4.5 0 3-1.3 4.5 0"/>
+            </svg>
+          </span>
+          <h3>Piscinas Adulto e Infantil</h3>
+          <p>Área aquática climatizada com raia semiolímpica e espaço kids monitorado.</p>
+        </div>
+      </article>
+
+      <!-- Futebol -->
+      <article class="attr-card">
+        <div class="ph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 8l3.2 2.3-1.2 3.7H10L8.8 10.3 12 8z"/>
+          </svg>
+          <span class="ph-label">Foto sugerida</span>
+          <span class="ph-dim">1200 × 900 px</span>
+        </div>
+        <div class="attr-body">
+          <span class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="8.5"/>
+              <path d="M12 8.5l3 2.2-1.1 3.5h-3.8L9 10.7 12 8.5z"/>
+            </svg>
+          </span>
+          <h3>Campo de Futebol Profissional</h3>
+          <p>Gramado oficial para os jogos do fim de semana e os campeonatos internos.</p>
+        </div>
+      </article>
+
+      <!-- Salão de eventos -->
+      <article class="attr-card">
+        <div class="ph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 20V10l8-5 8 5v10"/>
+            <path d="M9 20v-6h6v6"/>
+            <path d="M12 5v3"/>
+          </svg>
+          <span class="ph-label">Foto sugerida</span>
+          <span class="ph-dim">1200 × 900 px</span>
+        </div>
+        <div class="attr-body">
+          <span class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 20V10l8-5 8 5v10"/>
+              <path d="M9 20v-6h6v6"/>
+            </svg>
+          </span>
+          <h3>Salão de Eventos Moderno</h3>
+          <p>Espaço climatizado e decorável, pronto para casamentos, formaturas e festas.</p>
+        </div>
+      </article>
+
+      <!-- Quiosques -->
+      <article class="attr-card">
+        <div class="ph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 20l1-8h10l1 8"/>
+            <rect x="5" y="20" width="14" height="1.6" rx="0.6"/>
+            <path d="M9 12c0-2 1-2.5 1-4.2S9 5 9 5"/>
+            <path d="M13 12c0-2 1-2.5 1-4.2S13 5 13 5"/>
+          </svg>
+          <span class="ph-label">Foto sugerida</span>
+          <span class="ph-dim">1200 × 900 px</span>
+        </div>
+        <div class="attr-body">
+          <span class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 19l1-7h10l1 7"/>
+              <path d="M9 11.5c0-1.8.9-2.3.9-3.8S9 5.5 9 5.5"/>
+              <path d="M13 11.5c0-1.8.9-2.3.9-3.8s-.9-2.2-.9-2.2"/>
+            </svg>
+          </span>
+          <h3>Quiosques com Churrasqueira</h3>
+          <p>Espaços reservados individualmente para reunir amigos e família à vontade.</p>
+        </div>
+      </article>
+
+      <!-- Quadras -->
+      <article class="attr-card">
+        <div class="ph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="5" width="18" height="14" rx="1.5"/>
+            <path d="M3 12h18"/>
+            <path d="M8 5v14M16 5v14"/>
+          </svg>
+          <span class="ph-label">Foto sugerida</span>
+          <span class="ph-dim">1200 × 900 px</span>
+        </div>
+        <div class="attr-body">
+          <span class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3.5" y="6" width="17" height="12" rx="1.4"/>
+              <path d="M3.5 12h17"/>
+            </svg>
+          </span>
+          <h3>Quadras de Tênis e Vôlei</h3>
+          <p>Quadras oficiais com iluminação noturna para treinos e torneios recreativos.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ PLANOS ============ -->
+<section class="section section--pale" id="planos">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Planos de associado</p>
+      <h2>Escolha o plano que combina com sua rotina</h2>
+      <p>Benefícios pensados para quem vive sozinho, em família ou representa uma empresa parceira.</p>
+    </div>
+
+    <div class="plans-grid">
+
+      <div class="plan-card">
+        <span class="plan-name">Plano Individual</span>
+        <h3 class="plan-title">Para você</h3>
+        <div class="plan-price"><strong>149</strong><span>R$ / mês*</span></div>
+        <ul class="plan-features">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg> Acesso completo à estrutura esportiva</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg> 1 convidado por visita</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg> Desconto em aulas esportivas</li>
+        </ul>
+        <a href="#contato" class="btn btn-ghost btn-block">Quero me Associar</a>
+      </div>
+
+      <div class="plan-card is-featured">
+        <span class="plan-ribbon">Mais escolhido</span>
+        <span class="plan-name">Plano Família</span>
+        <h3 class="plan-title">Para todos em casa</h3>
+        <div class="plan-price"><strong>249</strong><span>R$ / mês*</span></div>
+        <ul class="plan-features">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg> Titular + dependentes inclusos</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg> Espaço kids e colônia de férias</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg> Prioridade na reserva de quiosques</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg> 20% de desconto no salão de eventos</li>
+        </ul>
+        <a href="#contato" class="btn btn-gold btn-block">Quero me Associar</a>
+      </div>
+
+      <div class="plan-card">
+        <span class="plan-name">Plano Comunitário</span>
+        <h3 class="plan-title">Para empresas parceiras</h3>
+        <div class="plan-price"><strong>89</strong><span>R$ / mês*</span></div>
+        <ul class="plan-features">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg> Acesso em dias e horários definidos</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg> Condição especial para grupos</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg> Ideal para colaboradores de convênio</li>
+        </ul>
+        <a href="#contato" class="btn btn-ghost btn-block">Quero me Associar</a>
+      </div>
+
+    </div>
+
+    <p class="plans-note">*Valores meramente ilustrativos para este protótipo — os planos e preços reais serão configurados junto à secretaria do clube.</p>
+  </div>
+</section>
+
+<!-- ============ EVENTOS ============ -->
+<section class="section" id="eventos">
+  <div class="wrap events-layout">
+    <div class="events-copy">
+      <div class="section-head">
+        <p class="eyebrow">Locação para eventos</p>
+        <h2>O cenário certo para celebrar cada fase da vida</h2>
+        <p>Aniversários, casamentos, formaturas e confraternizações de empresa — nosso salão e área externa se adaptam ao tamanho e ao clima da sua festa.</p>
+      </div>
+      <ul class="events-list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10l8-5 8 5v10"/><path d="M9 20v-6h6v6"/></svg> Salão climatizado para até 200 convidados</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="17.5" cy="6.5" r="2"/><path d="M2 13c1.5 1.3 3 1.3 4.5 0s3-1.3 4.5 0 3 1.3 4.5 0 3-1.3 4.5 0"/></svg> Área externa com vista para as piscinas</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 19l1-7h10l1 7"/></svg> Estrutura de apoio com cozinha e churrasqueiras</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16"/></svg> Consulta de datas disponíveis em minutos</li>
+      </ul>
+      <a href="https://wa.me/5500000000000?text=Ol%C3%A1!%20Gostaria%20de%20consultar%20datas%20dispon%C3%ADveis%20para%20um%20evento%20na%20AABB." class="btn btn-gold" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.29-1.39a9.9 9.9 0 0 0 4.7 1.2h.01c5.46 0 9.91-4.45 9.91-9.9 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2zm0 1.67c2.19 0 4.25.85 5.8 2.4a8.2 8.2 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.23 8.24a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.14.82.84-3.06-.2-.32a8.18 8.18 0 0 1-1.26-4.36c0-4.54 3.7-8.23 8.26-8.23zm-4.5 4.44c-.16 0-.42.06-.64.31-.22.25-.85.83-.85 2.02s.87 2.35.99 2.51c.12.16 1.7 2.6 4.13 3.64 2.02.87 2.43.7 2.87.66.44-.04 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.92-1.18-.71-.63-1.19-1.41-1.33-1.65-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.32-.75-1.8-.2-.47-.4-.4-.54-.41z"/></svg>
+        Consultar Datas Disponíveis no WhatsApp
+      </a>
+    </div>
+
+    <div class="events-media">
+      <div class="ph">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="16" rx="2"/>
+          <path d="M3 15l5-5 4 4 3-3 6 6"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+        </svg>
+        <span class="ph-label">Foto sugerida do salão decorado</span>
+        <span class="ph-dim">1600 × 1000 px</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RODAPÉ ============ -->
+<footer class="site-footer" id="contato">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <span class="crest">AABB</span>
+      <p>Associação Atlética Banco do Brasil — tradição em esporte, lazer e convivência em família há mais de quatro décadas.</p>
+      <div class="social-row">
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="3.6"/><circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/></svg></a>
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 8.5h2V5.2h-2.4C11.4 5.2 10 6.6 10 8.8v2H8v3.2h2V19h3.1v-5h2.4l.5-3.2h-2.9V9c0-.6.2-.5.9-.5z"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="6.5" width="18" height="11" rx="3"/><path d="M10.5 10l4 2-4 2z" fill="currentColor" stroke="none"/></svg></a>
+      </div>
+    </div>
+
+    <div>
+      <h4>Endereço</h4>
+      <p>Av. dos Esportes, 1200<br>Bairro Jardim Atlético<br>[Nome da Cidade] — [UF]</p>
+    </div>
+
+    <div>
+      <h4>Horário</h4>
+      <ul>
+        <li>Ter. a Sex.: 6h às 22h</li>
+        <li>Sáb., Dom. e Feriados: 7h às 20h</li>
+        <li>Seg.: Manutenção (fechado)</li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Secretaria</h4>
+      <ul>
+        <li>(00) 0000-0000</li>
+        <li>secretaria@aabb-cidade.org.br</li>
+        <li>Atendimento: 8h às 18h</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wrap footer-bottom">
+    <span>© 2026 AABB [Nome da Cidade]. Protótipo de apresentação — todos os direitos reservados.</span>
+    <span>Desenvolvido para modernizar o atendimento e a captação de sócios.</span>
+  </div>
+</footer>
+
+<!-- WhatsApp flutuante: substituir o número pelo contato real da secretaria -->
+<a class="wa-float" href="https://wa.me/5500000000000" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.29-1.39a9.9 9.9 0 0 0 4.7 1.2h.01c5.46 0 9.91-4.45 9.91-9.9 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2zm0 1.67c2.19 0 4.25.85 5.8 2.4a8.2 8.2 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.23 8.24a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.14.82.84-3.06-.2-.32a8.18 8.18 0 0 1-1.26-4.36c0-4.54 3.7-8.23 8.26-8.23zm-4.5 4.44c-.16 0-.42.06-.64.31-.22.25-.85.83-.85 2.02s.87 2.35.99 2.51c.12.16 1.7 2.6 4.13 3.64 2.02.87 2.43.7 2.87.66.44-.04 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.92-1.18-.71-.63-1.19-1.41-1.33-1.65-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.32-.75-1.8-.2-.47-.4-.4-.54-.41z"/></svg>
+</a>
+
+<script>
+  // Fecha o menu mobile ao clicar em um link do menu
+  document.querySelectorAll('.main-nav a').forEach(function(link){
+    link.addEventListener('click', function(){
+      document.getElementById('nav-toggle').checked = false;
+    });
+  });
+</script>
+
+</body>
+</html>
