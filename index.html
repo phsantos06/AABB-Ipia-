@@ -294,9 +294,6 @@ button{ font-family: inherit; }
   display:grid;
   gap: 2.5rem;
 }
-@media (max-width: 760px){
-  .hero-art{ opacity:0.35; }
-}
 .hero-eyebrow{
   font-family: var(--font-mono);
   font-size:.72rem;
@@ -729,6 +726,50 @@ button{ font-family: inherit; }
 }
 .wa-float:hover{ transform: scale(1.07); }
 .wa-float svg{ width:28px; height:28px; }
+
+/* =========================================================
+   HERO MOBILE — layout empilhado: foto do clube em faixa fixa
+   no topo, textos e CTAs num bloco azul limpo logo abaixo
+   ========================================================= */
+@media (max-width: 768px){
+  .hero-art{
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: 230px;
+    overflow: hidden;
+  }
+  .hero-art img{ object-position: center 62%; }
+  .hero-art::after{
+    background: linear-gradient(180deg,
+      rgba(0,45,110,0.55) 0%,
+      transparent 22%,
+      transparent 68%,
+      var(--blue-deep) 100%);
+  }
+  .hero::after{ display:none; }
+  .hero .wrap{
+    padding-block: 1.75rem 2.25rem;
+    gap: 1.1rem;
+  }
+  .hero h1{
+    font-size: 1.85rem;
+    max-width: none;
+    margin-top: .75rem;
+  }
+  .hero p.lede{
+    font-size: .96rem;
+    margin-top: .75rem;
+  }
+  .hero-ctas{
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 1.4rem;
+    gap: .75rem;
+  }
+  .hero-ctas .btn{ width:100%; }
+  .hero-trust{ display:none; }
+}
 
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior:auto; }
