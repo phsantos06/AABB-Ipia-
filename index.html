@@ -1878,14 +1878,17 @@ button{ font-family: inherit; }
     });
   });
 
-  // Scroll reveal otimizado com lazy loading
+  // Scroll reveal otimizado com lazy loading e efeito bidirecional
   if('IntersectionObserver' in window){
-    // Observer para efeitos de scroll
+    // Observer para efeitos de scroll (entra e sai da viewport)
     const revealObs = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
-        if(entry.isIntersecting && !entry.target.classList.contains('animated')){
-          entry.target.classList.add('fade-in', 'animated');
-          revealObs.unobserve(entry.target);
+        if(entry.isIntersecting){
+          entry.target.classList.add('fade-in');
+          entry.target.classList.remove('animated');
+        } else {
+          entry.target.classList.remove('fade-in');
+          entry.target.classList.add('animated');
         }
       });
     }, { threshold: 0.05, rootMargin: '0px 0px -80px 0px' });
