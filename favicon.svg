@@ -1,0 +1,13 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fundo circular azul -->
+  <circle cx="100" cy="100" r="100" fill="#002D6E"/>
+
+  <!-- Destaque dourado no inferior -->
+  <rect x="30" y="130" width="140" height="40" rx="20" fill="#FFCC00"/>
+
+  <!-- Texto AABB em branco -->
+  <text x="100" y="95" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle" letter-spacing="-2">AABB</text>
+
+  <!-- Texto IPIAÚ em azul escuro no retângulo amarelo -->
+  <text x="100" y="152" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#002D6E" text-anchor="middle" dominant-baseline="middle">IPIAÚ</text>
+</svg>
