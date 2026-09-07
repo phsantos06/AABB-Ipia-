@@ -1367,20 +1367,6 @@ button{ font-family: inherit; }
   }
 }
 
-.photo-tile, .plan-card, .section{
-  animation-delay: 0s;
-}
-
-.photo-tile:nth-child(1){ animation-delay: 0.1s; }
-.photo-tile:nth-child(2){ animation-delay: 0.2s; }
-.photo-tile:nth-child(3){ animation-delay: 0.3s; }
-.photo-tile:nth-child(4){ animation-delay: 0.4s; }
-.photo-tile:nth-child(5){ animation-delay: 0.5s; }
-.photo-tile:nth-child(6){ animation-delay: 0.6s; }
-
-.plan-card:nth-child(1){ animation-delay: 0.1s; }
-.plan-card:nth-child(2){ animation-delay: 0.2s; }
-.plan-card:nth-child(3){ animation-delay: 0.3s; }
 
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior:auto; }
@@ -1896,8 +1882,8 @@ button{ font-family: inherit; }
   // Efeitos de scroll reveal
   if('IntersectionObserver' in window){
     const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
+      threshold: 0.05,
+      rootMargin: '0px'
     };
 
     const observer = new IntersectionObserver(function(entries){
@@ -1908,7 +1894,8 @@ button{ font-family: inherit; }
           } else {
             entry.target.classList.add('fade-in');
           }
-          observer.unobserve(entry.target);
+        } else {
+          entry.target.classList.remove('slide-up', 'fade-in');
         }
       });
     }, observerOptions);
