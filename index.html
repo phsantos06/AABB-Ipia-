@@ -1342,47 +1342,38 @@ button{ font-family: inherit; }
    ========================================================= */
 .fade-in{
   opacity: 0;
-  transform: translateY(40px);
-  animation: slideUpFade 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform: translateY(25px);
+  animation: slideUpFade 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 @keyframes slideUpFade{
-  from{
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to{
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0%{ opacity: 0; transform: translateY(25px); }
+  100%{ opacity: 1; transform: translateY(0); }
 }
 
-/* Hover effect nas imagens */
+/* =========================================================
+   HOVER EFFECTS
+   ========================================================= */
 .photo-tile{
   transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   cursor: pointer;
-}
-
-.photo-tile:hover{
-  transform: translateY(-12px) scale(1.03);
-  box-shadow: 0 25px 50px -15px rgba(0,45,110,0.5);
-}
-
-.photo-tile-art{
-  transition: transform 0.35s ease;
   overflow: hidden;
 }
 
+.photo-tile:hover{
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 45px -12px rgba(0,45,110,0.45);
+}
+
+.photo-tile-art{
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
 .photo-tile:hover .photo-tile-art{
-  transform: scale(1.08);
-}
-
-.photo-tile-art img{
-  transition: transform 0.35s ease;
-}
-
-.photo-tile:hover .photo-tile-art img{
-  transform: scale(1.1);
+  transform: scale(1.06);
 }
 
 
@@ -1887,24 +1878,38 @@ button{ font-family: inherit; }
     });
   });
 
-  // Efeitos de scroll reveal suaves
+  // Scroll reveal otimizado com lazy loading
   if('IntersectionObserver' in window){
-    const observerOptions = {
-      threshold: 0.05,
-      rootMargin: '0px 0px -100px 0px'
-    };
-
-    const observer = new IntersectionObserver(function(entries){
+    // Observer para efeitos de scroll
+    const revealObs = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if(entry.isIntersecting && !entry.target.classList.contains('animated')){
           entry.target.classList.add('fade-in', 'animated');
-          observer.unobserve(entry.target);
+          revealObs.unobserve(entry.target);
         }
       });
-    }, observerOptions);
+    }, { threshold: 0.05, rootMargin: '0px 0px -80px 0px' });
+
+    // Observer para lazy loading de imagens
+    const imgObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          const img = entry.target;
+          if(img.dataset.src){
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+            imgObs.unobserve(img);
+          }
+        }
+      });
+    }, { rootMargin: '50px' });
 
     document.querySelectorAll('.photo-tile, .plan-card, .tile-grid, .infra-cta, .lead-form, .contact-band, .site-footer, .stat-strip, .page-banner').forEach(function(el){
-      observer.observe(el);
+      revealObs.observe(el);
+    });
+
+    document.querySelectorAll('img[data-src]').forEach(function(img){
+      imgObs.observe(img);
     });
   }
 </script>
