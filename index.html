@@ -785,15 +785,15 @@ button{ font-family: inherit; }
      da proporção muito alta e estreita. Com uma altura própria,
      o recorte fica natural e dá pra ver a placa "AABB" e um
      pouco da estrutura ao fundo, sem ampliar além do necessário */
-  .hero-art{ top:0; left:0; right:0; bottom:auto; height:34rem; }
-  .hero-art img{ object-position: 92% center; }
+  .hero-art{ top:0; left:0; right:0; bottom:auto; height:32rem; }
+  .hero-art img{ object-position: 80% center; object-fit: cover; }
   .hero-art::after{
     background:
-      linear-gradient(180deg, transparent 72%, var(--blue-deep) 100%),
+      linear-gradient(180deg, transparent 70%, var(--blue-deep) 100%),
       linear-gradient(90deg,
-        rgba(0,45,110,0.90) 0%,
-        rgba(0,55,125,0.72) 45%,
-        rgba(0,55,125,0.30) 100%);
+        rgba(0,45,110,0.55) 0%,
+        rgba(0,55,125,0.35) 40%,
+        rgba(0,55,125,0.08) 100%);
   }
 
   /* ---- Estatísticas: card "vidro" destacado sobre o azul do
