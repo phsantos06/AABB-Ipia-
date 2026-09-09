@@ -825,65 +825,63 @@ button{ font-family: inherit; }
      HERO
      ========================= */
 
-  /* Reordena o hero no mobile: TÍTULO (colado na logo) → FOTO → texto.
-     display:contents dissolve os wrappers (.wrap e o div interno) para que
-     título, imagem e descrição virem irmãos no mesmo flex e possam ser
-     reordenados por 'order'. O desktop não usa nada disto (está fora desta
-     media query), então permanece 100% intacto. */
+  /* No mobile o hero mantém o MESMO layout do desktop/print: texto à
+     ESQUERDA e a foto do clube à DIREITA. A foto é um fundo full-bleed e o
+     texto ocupa ~64% da largura para a foto aparecer à direita. O gradiente
+     do desktop (.hero-art::after) escurece a esquerda para ler o texto.
+     Tudo aqui é ≤768px — o desktop não é tocado. */
   .hero{
     min-height:0;
-    background:var(--blue-deep);
     overflow:hidden;
-
-    display:flex;
-    flex-direction:column;
-    padding-top:6rem;   /* espaço para o header/logo absolutos no topo */
+    background:linear-gradient(158deg, var(--blue-deep) 0%, #013D8F 58%, var(--blue-royal) 100%);
   }
 
-  .hero > .wrap{ display:contents; }
-  .hero > .wrap > div{ display:contents; }
-
-  /* respiro lateral reaplicado só nos textos (o .wrap foi dissolvido);
-     a foto fica full-bleed e o placar usa o recuo próprio dele */
-  .hero-eyebrow,
-  .hero h1,
-  .hero p.lede,
-  .hero-ctas{
-    padding-inline:1.25rem;
+  .hero .wrap{
+    position:relative;
+    z-index:2;
+    display:block;
+    padding-block: clamp(6rem, 16vw, 8rem) clamp(2.25rem, 6vw, 3.5rem);
   }
 
-  .hero-eyebrow{ order:1; }
-  .hero h1{ order:2; }
-  .hero-art{ order:3; }
-  .hero p.lede{ order:4; }
-  .hero-ctas{ order:5; }
-  .hero-trust{ order:6; }
-  .stat-strip{ order:7; }
+  /* limita a largura do texto para a foto respirar à direita */
+  .hero .wrap > div{
+    max-width:64%;
+  }
 
-  /* A foto do clube aparece INTEIRA logo abaixo do título (não mais como
-     fundo). Cantos arredondados para destacá-la do azul institucional. */
+  /* foto do clube como fundo à direita, igual ao desktop/print */
   .hero-art{
-    position:static;
-    inset:auto;
-    height:auto;
-    margin:1.25rem 0 0;
-    border-radius:14px;
-    overflow:hidden;
+    position:absolute;
+    inset:0;
+    height:100%;
+    z-index:0;
   }
-
   .hero-art img{
     width:100%;
-    height:auto;
+    height:100%;
+    object-fit:cover;
+    object-position:82% 58%;
+  }
+
+  /* Escurece a ESQUERDA (leitura do texto) e faz a foto sumir no azul na
+     parte de BAIXO — assim o placar de estatísticas fica limpo no azul,
+     sem borda dura nem imagem vazando atrás. */
+  .hero-art::after{
     display:block;
-    border-radius:14px;
+    background:
+      linear-gradient(180deg,
+        transparent 0%,
+        transparent 52%,
+        rgba(0,45,110,.55) 74%,
+        var(--blue-deep) 92%),
+      linear-gradient(100deg,
+        var(--blue-deep) 0%,
+        var(--blue-deep) 30%,
+        rgba(1,61,143,0.72) 48%,
+        rgba(1,61,143,0.28) 66%,
+        transparent 84%);
   }
 
-  /* sem overlay escuro: a foto agora é um bloco limpo, não um fundo */
-  .hero-art::after{ display:none; }
-
-  .hero::after{
-    display:none;
-  }
+  .hero::after{ display:none; }   /* some o brilho dourado decorativo no mobile */
 
   .hero-eyebrow{
     font-size:.62rem;
@@ -892,30 +890,29 @@ button{ font-family: inherit; }
   }
 
   .hero h1{
-    font-size:2.55rem;
+    font-size:2rem;
     line-height:1.08;
-    max-width:22ch;
     margin-top:.5rem;
   }
 
   .hero p.lede{
-    font-size:1rem;
+    font-size:.92rem;
     line-height:1.45;
-    max-width:34rem;
     margin-top:1rem;
   }
 
   .hero-ctas{
     display:flex;
     flex-direction:column;
-    gap:.8rem;
+    gap:.7rem;
     margin-top:1.35rem;
+    align-items:flex-start;
   }
 
   .hero-ctas .btn{
     width:100%;
-    min-height:58px;
-    font-size:1rem;
+    min-height:52px;
+    font-size:.95rem;
   }
 
   .hero-trust{
@@ -1307,17 +1304,13 @@ button{ font-family: inherit; }
     height:42px;
   }
 
-  .hero{
-    /* header menor (70px) nesta faixa → menos espaço no topo */
-    padding-top:5rem;
-  }
-
   .hero h1{
-    font-size:2.15rem;
+    /* telas bem estreitas: título um pouco menor p/ caber na coluna de texto */
+    font-size:1.8rem;
   }
 
   .hero p.lede{
-    font-size:.94rem;
+    font-size:.9rem;
   }
 
   .hero-ctas .btn{
