@@ -825,65 +825,55 @@ button{ font-family: inherit; }
      HERO
      ========================= */
 
-  /* No mobile o hero mantém o MESMO layout do desktop/print: texto à
-     ESQUERDA e a foto do clube à DIREITA. A foto é um fundo full-bleed e o
-     texto ocupa ~64% da largura para a foto aparecer à direita. O gradiente
-     do desktop (.hero-art::after) escurece a esquerda para ler o texto.
+  /* No mobile: TEXTO à esquerda e a FOTO COMPLETA do clube à direita
+     (como no print). Grid de 2 colunas com "gutters" (colunas de folga) nas
+     laterais garante margem e evita que a foto seja cortada. A foto é um
+     cartão (contain = imagem INTEIRA, sem recorte/zoom). O placar de
+     estatísticas ocupa a faixa de baixo em largura total.
      Tudo aqui é ≤768px — o desktop não é tocado. */
   .hero{
     min-height:0;
     overflow:hidden;
     background:linear-gradient(158deg, var(--blue-deep) 0%, #013D8F 58%, var(--blue-royal) 100%);
+
+    display:grid;
+    grid-template-columns: 1.25rem minmax(0,1fr) .8rem 44% 1.25rem;
+    grid-template-areas:
+      ".     text  .     image ."
+      "stats stats stats stats stats";
+    align-items:center;
   }
 
-  .hero .wrap{
+  .hero > .wrap{
+    grid-area:text;
     position:relative;
     z-index:2;
     display:block;
+    padding-inline:0;
     padding-block: clamp(6rem, 16vw, 8rem) clamp(2.25rem, 6vw, 3.5rem);
   }
+  .hero > .wrap > div{ max-width:none; }
 
-  /* limita a largura do texto para a foto respirar à direita.
-     '>' garante que atinge SÓ o wrap do texto do hero — não as células
-     do placar (que também são .wrap > div dentro de .hero). */
-  .hero > .wrap > div{
-    max-width:64%;
-  }
-
-  /* foto do clube como fundo à direita, igual ao desktop/print */
+  /* Foto COMPLETA do clube, como cartão à direita (contain = sem corte) */
   .hero-art{
-    position:absolute;
-    inset:0;
-    height:100%;
-    z-index:0;
+    grid-area:image;
+    position:static;
+    inset:auto;
+    width:auto;
+    height:auto;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 12px 30px rgba(0,0,0,.30);
   }
   .hero-art img{
     width:100%;
-    height:100%;
-    object-fit:cover;
-    object-position:82% 58%;
-  }
-
-  /* Escurece a ESQUERDA (leitura do texto) e faz a foto sumir no azul na
-     parte de BAIXO — assim o placar de estatísticas fica limpo no azul,
-     sem borda dura nem imagem vazando atrás. */
-  .hero-art::after{
+    height:auto;
     display:block;
-    background:
-      linear-gradient(180deg,
-        transparent 0%,
-        transparent 52%,
-        rgba(0,45,110,.55) 74%,
-        var(--blue-deep) 92%),
-      linear-gradient(100deg,
-        var(--blue-deep) 0%,
-        var(--blue-deep) 30%,
-        rgba(1,61,143,0.72) 48%,
-        rgba(1,61,143,0.28) 66%,
-        transparent 84%);
+    object-fit:contain;
   }
+  .hero-art::after{ display:none; }   /* cartão limpo, sem overlay escuro */
 
-  .hero::after{ display:none; }   /* some o brilho dourado decorativo no mobile */
+  .hero::after{ display:none; }        /* some o brilho dourado decorativo no mobile */
 
   .hero-eyebrow{
     font-size:.62rem;
@@ -927,6 +917,7 @@ button{ font-family: inherit; }
      ========================= */
 
   .stat-strip{
+    grid-area:stats;   /* faixa de largura total abaixo do texto + foto */
     position:relative;
     z-index:3;
 
