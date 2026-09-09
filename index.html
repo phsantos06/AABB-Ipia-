@@ -886,8 +886,11 @@ button{ font-family: inherit; }
 
     display:block;
 
-    /* empurra o texto para baixo da foto completa exibida no topo */
-    padding-top:15.5rem;
+    /* Empurra o texto para baixo da foto completa. Como a foto usa
+       object-fit:contain (altura = ~61% da largura), a folga acompanha a
+       largura via calc — assim o texto nunca sobrepõe a imagem em nenhum
+       tamanho de tela (≤768px). */
+    padding-top: calc(61vw + 1.5rem);
     padding-bottom:2rem;
   }
 
@@ -1311,7 +1314,8 @@ button{ font-family: inherit; }
   }
 
   .hero .wrap{
-    padding-top:8.5rem;
+    /* mesma âncora da foto completa (ver bloco ≤768px) */
+    padding-top: calc(61vw + 1.5rem);
   }
 
   .hero h1{
