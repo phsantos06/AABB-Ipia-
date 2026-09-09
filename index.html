@@ -41,9 +41,10 @@
 *, *::before, *::after{ box-sizing: border-box; }
 html{ scroll-behavior: smooth; scrollbar-width: none; }
 html::-webkit-scrollbar{ display: none; }
-/* overflow-x só no html: evita que o body vire um segundo container de
-   rolagem (scroller aninhado), que no celular fazia o 1º swipe "não pegar". */
-html{ max-width:100%; overflow-x: hidden; }
+/* overflow-x:clip corta o transbordo horizontal SEM criar um container de
+   rolagem — a viewport continua rolando nativamente. Evita o scroller
+   aninhado que fazia o 1º swipe "não pegar" no celular. */
+html{ max-width:100%; overflow-x: clip; }
 body{ max-width:100%; }
 body{
   margin:0;
@@ -758,9 +759,8 @@ button{ font-family: inherit; }
      BASE
      ========================= */
 
-  body{
-    overflow-x:hidden;
-  }
+  /* (o corte horizontal fica só no html via overflow-x:clip; o body NÃO
+     deve ter overflow aqui, senão vira um 2º scroller e trava o 1º swipe) */
 
   .wrap{
     padding-inline: 1.25rem;
@@ -825,73 +825,64 @@ button{ font-family: inherit; }
      HERO
      ========================= */
 
+  /* Reordena o hero no mobile: TÍTULO (colado na logo) → FOTO → texto.
+     display:contents dissolve os wrappers (.wrap e o div interno) para que
+     título, imagem e descrição virem irmãos no mesmo flex e possam ser
+     reordenados por 'order'. O desktop não usa nada disto (está fora desta
+     media query), então permanece 100% intacto. */
   .hero{
     min-height:0;
     background:var(--blue-deep);
     overflow:hidden;
+
+    display:flex;
+    flex-direction:column;
+    padding-top:6rem;   /* espaço para o header/logo absolutos no topo */
   }
 
-  /*
-    A imagem passa a ocupar praticamente todo o hero.
-    Isso deixa o celular parecido com a referência:
-    texto sobre a foto + estatísticas no mesmo bloco.
-  */
+  .hero > .wrap{ display:contents; }
+  .hero > .wrap > div{ display:contents; }
 
-  /* A foto aparece INTEIRA no topo (sem recorte/zoom): a altura segue a
-     proporção real da imagem e o restante do hero é o azul institucional. */
+  /* respiro lateral reaplicado só nos textos (o .wrap foi dissolvido);
+     a foto fica full-bleed e o placar usa o recuo próprio dele */
+  .hero-eyebrow,
+  .hero h1,
+  .hero p.lede,
+  .hero-ctas{
+    padding-inline:1.25rem;
+  }
+
+  .hero-eyebrow{ order:1; }
+  .hero h1{ order:2; }
+  .hero-art{ order:3; }
+  .hero p.lede{ order:4; }
+  .hero-ctas{ order:5; }
+  .hero-trust{ order:6; }
+  .stat-strip{ order:7; }
+
+  /* A foto do clube aparece INTEIRA logo abaixo do título (não mais como
+     fundo). Cantos arredondados para destacá-la do azul institucional. */
   .hero-art{
-    position:absolute;
-    top:0; left:0; right:0; bottom:auto;
+    position:static;
+    inset:auto;
     height:auto;
-    z-index:0;
+    margin:1.25rem 0 0;
+    border-radius:14px;
+    overflow:hidden;
   }
 
   .hero-art img{
     width:100%;
     height:auto;
-    object-fit:contain;
-    object-position:center top;
+    display:block;
+    border-radius:14px;
   }
 
-  .hero-art::after{
-    content:"";
-    position:absolute;
-    inset:0;
-
-    background:
-      linear-gradient(
-        180deg,
-        rgba(0,45,110,.08) 0%,
-        rgba(0,45,110,.15) 35%,
-        rgba(0,45,110,.55) 67%,
-        var(--blue-deep) 88%,
-        var(--blue-deep) 100%
-      ),
-      linear-gradient(
-        90deg,
-        rgba(0,45,110,.70) 0%,
-        rgba(0,45,110,.45) 38%,
-        rgba(0,45,110,.08) 72%,
-        rgba(0,45,110,.02) 100%
-      );
-  }
+  /* sem overlay escuro: a foto agora é um bloco limpo, não um fundo */
+  .hero-art::after{ display:none; }
 
   .hero::after{
     display:none;
-  }
-
-  .hero .wrap{
-    position:relative;
-    z-index:2;
-
-    display:block;
-
-    /* Empurra o texto para baixo da foto completa. Como a foto usa
-       object-fit:contain (altura = ~61% da largura), a folga acompanha a
-       largura via calc — assim o texto nunca sobrepõe a imagem em nenhum
-       tamanho de tela (≤768px). */
-    padding-top: calc(61vw + 1.5rem);
-    padding-bottom:2rem;
   }
 
   .hero-eyebrow{
@@ -1054,7 +1045,10 @@ button{ font-family: inherit; }
   .tile-grid{
     display:flex;
 
+    /* carrossel só na horizontal; vertical travado para não virar um
+       scroller aninhado (o reveal dos cards gerava ~6px de transbordo) */
     overflow-x:auto;
+    overflow-y:hidden;
 
     gap:1rem;
 
@@ -1313,9 +1307,9 @@ button{ font-family: inherit; }
     height:42px;
   }
 
-  .hero .wrap{
-    /* mesma âncora da foto completa (ver bloco ≤768px) */
-    padding-top: calc(61vw + 1.5rem);
+  .hero{
+    /* header menor (70px) nesta faixa → menos espaço no topo */
+    padding-top:5rem;
   }
 
   .hero h1{
