@@ -928,10 +928,11 @@ button{ font-family: inherit; }
     position:relative;
     z-index:3;
 
-    background:transparent;
+    /* azul sólido: cobre a foto do hero atrás do placar (fica limpo) */
+    background:var(--blue-deep);
     border:0;
 
-    padding:0 0 2.25rem;
+    padding:1.75rem 0 2.25rem;
   }
 
   .stat-strip .wrap{
@@ -981,8 +982,9 @@ button{ font-family: inherit; }
   }
 
   .stat strong{
-    font-size:2rem;
+    font-size:1.75rem;
     line-height:1;
+    white-space:nowrap;   /* evita "35 mil m²" quebrar em 3 linhas */
   }
 
   .stat span{
@@ -1322,7 +1324,7 @@ button{ font-family: inherit; }
   }
 
   .stat strong{
-    font-size:1.7rem;
+    font-size:1.5rem;
   }
 
   .stat span{
