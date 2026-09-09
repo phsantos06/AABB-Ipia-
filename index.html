@@ -41,7 +41,10 @@
 *, *::before, *::after{ box-sizing: border-box; }
 html{ scroll-behavior: smooth; scrollbar-width: none; }
 html::-webkit-scrollbar{ display: none; }
-html, body{ max-width:100%; overflow-x: hidden; }
+/* overflow-x só no html: evita que o body vire um segundo container de
+   rolagem (scroller aninhado), que no celular fazia o 1º swipe "não pegar". */
+html{ max-width:100%; overflow-x: hidden; }
+body{ max-width:100%; }
 body{
   margin:0;
   background: var(--white);
@@ -235,7 +238,9 @@ button{ font-family: inherit; }
   .main-nav{
     position:absolute;
     top:84px; left:0; right:0;
-    background: rgba(0,45,110,0.97);
+    /* fundo transparente no container: o painel visível fica no <ul>,
+       que colapsa a 0 quando fechado — sem "linha azul" sob o header */
+    background: transparent;
     display:grid;
     grid-template-rows: 0fr;
     transition: grid-template-rows .32s ease;
@@ -246,12 +251,18 @@ button{ font-family: inherit; }
     flex-direction:column;
     align-items:stretch;
     gap:0;
-    padding: .5rem clamp(1.25rem,4vw,2.5rem) 1.25rem;
+    /* SEM padding vertical: qualquer padding impede o colapso a 0 e
+       reaparece como faixa azul. O respiro vem do padding dos links. */
+    padding: 0 clamp(1.25rem,4vw,2.5rem);
+    background: #002D6E;
+    /* escondido enquanto fechado: não captura toque no topo da página */
+    visibility: hidden;
+    transition: visibility 0s linear .32s;
   }
-  .main-nav li{ }
-  .main-nav a{ display:block; padding:.9rem 0; }
+  .main-nav a{ display:block; padding:1rem 0; }
   .main-nav a::after{ display:none; }
   .nav-toggle:checked ~ .main-nav{ grid-template-rows: 1fr; }
+  .nav-toggle:checked ~ .main-nav ul{ visibility: visible; transition-delay: 0s; }
   .nav-toggle:checked ~ .nav-toggle-label span{ background:transparent; }
   .nav-toggle:checked ~ .nav-toggle-label span::before{ top:0; transform: rotate(45deg); }
   .nav-toggle:checked ~ .nav-toggle-label span::after{ top:0; transform: rotate(-45deg); }
@@ -826,18 +837,20 @@ button{ font-family: inherit; }
     texto sobre a foto + estatísticas no mesmo bloco.
   */
 
+  /* A foto aparece INTEIRA no topo (sem recorte/zoom): a altura segue a
+     proporção real da imagem e o restante do hero é o azul institucional. */
   .hero-art{
     position:absolute;
-    inset:0;
-    height:100%;
+    top:0; left:0; right:0; bottom:auto;
+    height:auto;
     z-index:0;
   }
 
   .hero-art img{
     width:100%;
-    height:100%;
-    object-fit:cover;
-    object-position:65% 45%;
+    height:auto;
+    object-fit:contain;
+    object-position:center top;
   }
 
   .hero-art::after{
@@ -873,7 +886,8 @@ button{ font-family: inherit; }
 
     display:block;
 
-    padding-top:9.5rem;
+    /* empurra o texto para baixo da foto completa exibida no topo */
+    padding-top:15.5rem;
     padding-bottom:2rem;
   }
 
@@ -1359,9 +1373,9 @@ button{ font-family: inherit; }
    sem "susto" e sem travar em telas com menos GPU. */
 @media (max-width: 768px){
   .reveal{
-    transform: translate3d(0, 16px, 0);
-    transition-duration: .65s;
-    transition-timing-function: cubic-bezier(0.33, 0.8, 0.42, 1);
+    transform: translate3d(0, 14px, 0);
+    transition-duration: .9s;
+    transition-timing-function: cubic-bezier(0.33, 0, 0.2, 1);
   }
 }
 
