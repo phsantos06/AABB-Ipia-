@@ -843,8 +843,10 @@ button{ font-family: inherit; }
     padding-block: clamp(6rem, 16vw, 8rem) clamp(2.25rem, 6vw, 3.5rem);
   }
 
-  /* limita a largura do texto para a foto respirar à direita */
-  .hero .wrap > div{
+  /* limita a largura do texto para a foto respirar à direita.
+     '>' garante que atinge SÓ o wrap do texto do hero — não as células
+     do placar (que também são .wrap > div dentro de .hero). */
+  .hero > .wrap > div{
     max-width:64%;
   }
 
@@ -982,7 +984,7 @@ button{ font-family: inherit; }
   }
 
   .stat strong{
-    font-size:1.6rem;
+    font-size:1.7rem;
     line-height:1;
   }
 
@@ -1323,7 +1325,7 @@ button{ font-family: inherit; }
   }
 
   .stat strong{
-    font-size:1.35rem;
+    font-size:1.5rem;
   }
 
   .stat span{
