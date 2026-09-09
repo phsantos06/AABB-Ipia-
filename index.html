@@ -41,10 +41,10 @@
 *, *::before, *::after{ box-sizing: border-box; }
 html{ scroll-behavior: smooth; scrollbar-width: none; }
 html::-webkit-scrollbar{ display: none; }
-/* overflow-x:clip corta o transbordo horizontal SEM criar um container de
-   rolagem — a viewport continua rolando nativamente. Evita o scroller
-   aninhado que fazia o 1º swipe "não pegar" no celular. */
-html{ max-width:100%; overflow-x: clip; }
+/* Corte horizontal APENAS no html (único container de rolagem vertical).
+   O body NÃO recebe overflow — se receber, vira um 2º scroller aninhado e o
+   1º swipe "não pega" (tinha que rolar 2x pra descer/subir). */
+html{ max-width:100%; overflow-x: hidden; }
 body{ max-width:100%; }
 body{
   margin:0;
